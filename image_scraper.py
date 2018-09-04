@@ -4,6 +4,8 @@ import argparse
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 
 def main(argv):
     keywords = input("input words, e.g.'cat,dog,small kitty' : ").split(",")
@@ -28,11 +30,19 @@ def main(argv):
         search_blank.send_keys(keyword)
         search_blank.send_keys(Keys.ENTER)
 
-        d.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        # scroll bottom
+        target = d.find_element(By.XPATH, "//input[@value='Show more results']");
 
-        img_elements = d.find_elements_by_class_name("irc_mi")
-        for i, img_ele in enumerate(img_elements):
-            print(i, img_ele.get_attribute("src"))
+        actions = ActionChains(d)
+        actions.move_to_element(target)
+        actions.click(target)
+        actions.perform()
+        print(target.get_attribute("value"))
+
+        # img_elements = d.find_elements_by_class_name("rg_ic")
+        # for i, img_ele in enumerate(img_elements):
+        #     print(i, img_ele.get_attribute("src"))
+
 
     # d.close()
     # d.quit()
